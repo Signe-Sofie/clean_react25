@@ -23,3 +23,8 @@ export async function fetchProductBySlug(slug){
     const data = await client.fetch(`*[productslug.current == $slug]`, {slug})
     return data;
 }
+
+export async function fetchProductsByParentCategory(){
+    const data = await clientInformation.fetct(` *[_type == 'categories' && references('')]`)
+    return data 
+}
