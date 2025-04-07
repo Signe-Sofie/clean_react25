@@ -1,28 +1,38 @@
 import {useParams} from "react-router-dom"
-import { fetchAllCategories } from "../sanity/categoryServices"
+import { fetchAllCategories, fetchCategoryBySlug } from "../sanity/categoryServices"
 import { useEffect, useState } from "react"
 import { fetchProductsByParentCategory } from "../sanity/productsServices"
 
 export default function Category(){
     const {category} = useParams()
     const [parentCategories, setParentCategories] = useState([])
+    const [categoryId, setcategoryId] = useState([])
+    const [categories, setCategories] = useState([])
         
     const getAllParentCategories = async()=>{
         const data = await fetchAllParentCategories()
         setParentCategories(data)
     }
 
-    const getProductsByParentC = async ()=>{
-        const data = await fetchProductsByParentCategory()
+    const getProductsByParentC = async (id)=>{
+        const data = await fetchProductsByParentCategory(id)
+        setCategories(data)
+    }
+
+    const getCategoryBySlug = async(slug) =>{
+        const data = await fetchCategoryBySlug(slug)
+        setCategoryId(data[0]._id)
     }
 
     useEffect(()=>{
         getAllParentCategories()
+        
     },[])
 
     useEffect(()=>{
-        getProductsByParentC()
-    },[category])
+        getProductsByParentC(categoryId)
+        getCategoryBySlug(category)
+    },[category, categoryId])
 
 
     return (
@@ -30,7 +40,7 @@ export default function Category(){
     <h1>Category, {category ? category : null}</h1>
     { category == null ?
     (<section>
-        <h2>hovedkategorier</h2>
+        <h2>Hovedkategorier</h2>
         <ul>
             {parentCategories?.map((parenc) => (
             <li key={parenc._id}>
@@ -39,7 +49,10 @@ export default function Category(){
         </ul>
     </section>) :
     (<section>
-        <h2>underkategorier: {category}</h2>
+        <h2>Underkategorier: {category}</h2>
+        <ul>
+            {categories?.map(cat => <li key={cat.id}><Link to={cat.categoryslug.current}>{cat.categoryname}</Link></li>)}
+        </ul>
     </section>)}
   </>
   )  

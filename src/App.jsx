@@ -7,6 +7,7 @@ import { fetchAllCategories } from './sanity/categoryServices'
 import Category from './components/Category'
 import Product from './components/Product'
 import Home from './components/Home'
+import SubCategory from './components/SubCategory'
 
 function App() {
   const [products, setProducts] = useState([])
@@ -40,6 +41,7 @@ function App() {
         <Route path="product/:product" element={<Product />} />
         <Route path="category/:category" element={<Category />} />
         <Route path="category/" element={<Category />} />
+        <Route path="category/:category/subcategory" element={<SubCategory getProductsByCategory={getProductsByCategory} products={products}/>} />
       </Routes>
     </Layout>
 
